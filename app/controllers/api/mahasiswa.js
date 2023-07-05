@@ -84,39 +84,6 @@ module.exports = {
     }
   },
 
-  async updateDetail(req, res) {
-    try {
-      const {
-        name
-      } = req.body;
-
-      const id = req.params.id;
-      const compareId = id.toString() === req.mahasiswa.id.toString();
-
-      if (!compareId) {
-        res.status(401).json({
-          status: 'Failed',
-          message: 'Mahasiswa hanya bisa edit data sesuai dengan ID mahasiswa tersebut.'
-        });
-        return;
-      }
-
-      const update = await mahasiswaServices.update(req.params.id, {
-        name
-      });
-
-      res.status(200).json({
-        status: 'OK',
-        message: `Mahasiswa dengan ID ${req.params.id} telah berhasil diperbarui.`,
-      });
-    } catch (err) {
-      res.status(422).json({
-        status: 'Failed',
-        message: err.message,
-      });
-    }
-  },
-
   async deleteMahasiswa(req, res) {
     try {
       const id = req.params.id;
@@ -134,7 +101,7 @@ module.exports = {
         return;
       }
 
-      const compareMahasiswaId = req.mahasiswa.id === mahasiswa.id;
+      const compareMahasiswaId = req.mahasiswas.id === mahasiswa.id;
 
       if(!compareMahasiswaId) {
         res.status(404).json({
@@ -176,44 +143,28 @@ module.exports = {
       });
     }
   },
-
-  async getMahasiswa(req, res) {
-    const id = req.params.id
+  async getMahasiswaById(req, res) {
     try {
-      const user = await mahasiswaServices.getOne({
-        where: { id },
-        include: 'mahasiswa'
-      })
-  
-      return res.json(user)
+      const mahasiswa = await mahasiswaServices.getOne({
+        where: {
+          id: req.params.id
+        },
+        attributes: {
+          exclude: ['password']
+        }
+      });
+
+      if (!mahasiswa) {
+        throw new Error(`Mahasiswa dengan ID ${req.params.id} tidak ditemukan!`);
+      }
+      res.status(200).json(mahasiswa);
     } catch (err) {
-      console.log(err)
-      return res.status(500).json({ error: 'Something went wrong' })
+      res.status(404).json({
+        status: 'Failed',
+        message: err.message,
+      });
     }
   },
-
-  // async getMahasiswaById(req, res) {
-  //   try {
-  //     const mahasiswa = await mahasiswaServices.getOne({
-  //       where: {
-  //         id: req.params.id
-  //       },
-  //       attributes: {
-  //         exclude: ['password']
-  //       }
-  //     });
-
-  //     if (!mahasiswa) {
-  //       throw new Error(`Mahasiswa dengan ID ${req.params.id} tidak ditemukan!`);
-  //     }
-  //     res.status(200).json(mahasiswa);
-  //   } catch (err) {
-  //     res.status(404).json({
-  //       status: 'Failed',
-  //       message: err.message,
-  //     });
-  //   }
-  // },
 
   async getTotalMahasiswa(req, res) {
     const getAll = await mahasiswaServices.listByCondition({

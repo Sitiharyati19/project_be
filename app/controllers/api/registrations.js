@@ -42,35 +42,6 @@ module.exports = {
     });
   },
 
-  async getRegistrations(req, res) {
-    const id = req.params.id
-    try {
-      const getIdMahasiswa = await registrationsServices.getOne({
-        where: {id},
-        include: {
-          model: Mahasiswa,
-          as: 'mahasiswa',
-        },
-        order: [
-          ["mahasiswa_id", "DESC"]
-        ]
-      });
-      if (!getIdMahasiswa) {
-        throw new Error(`Pendaftaran dengan ID ${req.params.id} tidak ditemukan!`);
-      }
-      console.log(getIdMahasiswa.data);
-      res.status(200).json({
-        status: 'Success',
-        data: getIdMahasiswa
-      });
-    } catch (err) {
-      res.status(404).json({
-        status: 'Failed',
-        message: err.message,
-      });
-    }
-  },
-
   async getAllRegistrations(req, res) {
     const getAll = await registrationsServices.list({
       include: {
@@ -88,45 +59,32 @@ module.exports = {
     });
   },
 
-  // async getRegistrationsOne(req, res) {
-  //   try {
-  //     const id = req.params.id
+  async getRegistrationsOne(req, res) {
+    try {
+      const id = req.params.id
   
-  //     const registrations = await Registrations.findByPk(id);
+      const registrations = await Registrations.findByPk(id);
   
-  //     if (registrations) {
-  //       const mahasiswa = await Mahasiswa.findByPk(registrations.mahasiswa_id);
-  //       let data = {
-  //         id: mahasiswa.id,
-  //         name: mahasiswa.name,
-  //         nim: mahasiswa.nim,
-  //         prodi: registrations.prodi,
-  //         photo_profil: registrations.photo_profil,
-  //         photo_transfer: registrations.photo_transfer,
-  //         seat_number: registrations.seat_number,
-  //         tahun_masuk: registrations.tahun_masuk,
-  //       };
-  //       res.status(200).json({ mahasiswa: data });
-  //     } else {
-  //       throw new Error("Pendaftaran tidak ditemukan");
-  //     }
-  //   } catch (error) {
-  //     res.status(404).json({ message: error.message });
-  //   }
-  // },
+      if (registrations) {
+        const mahasiswa = await Mahasiswa.findByPk(registrations.mahasiswa_id);
+        let data = {
+          id: mahasiswa.id,
+          name: mahasiswa.name,
+          nim: mahasiswa.nim,
+          prodi: registrations.prodi,
+          photo_profil: registrations.photo_profil,
+          photo_transfer: registrations.photo_transfer,
+          seat_number: registrations.seat_number,
+          tahun_masuk: registrations.tahun_masuk,
+        };
+        res.status(200).json({ mahasiswa: data });
+      } else {
+        throw new Error("Pendaftaran tidak ditemukan");
+      }
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  },
 
-  // async getRegistrationsOne(req, res) {
-  //   const uuid = req.params.uuid
-  //   try {
-  //     const user = await User.findOne({
-  //       where: { uuid },
-  //       include: 'posts',
-  //     })
-  
-  //     return res.json(user)
-  //   } catch (err) {
-  //     console.log(err)
-  //     return res.status(500).json({ error: 'Something went wrong' })
-  //   }
-  // }
+
 }

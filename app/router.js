@@ -13,10 +13,6 @@ apiRouter.get("/", controllers.api.application.getRoot);
 /**
  * @Admin Resources 
  */
-// apiRouter.post("/api/admins/register",
-//   middlewares.adminCondition.checkCondition,
-//   controllers.api.admins.register
-// );
 apiRouter.post("/api/admin/login",
   controllers.api.admins.login
 );
@@ -53,25 +49,15 @@ apiRouter.get("/api/mahasiswa/who-am-i",
   controllers.api.mahasiswa.whoAmI
 );
 
-apiRouter.put("/api/mahasiswa/:id/detail",
-  middlewares.mahasiswaAuthorization.authorize,
-  controllers.api.mahasiswa.updateDetail
-);
-
 apiRouter.delete("/api/mahasiswa/:id/destroy",
   middlewares.mahasiswaAuthorization.authorize,
   controllers.api.mahasiswa.deleteMahasiswa
 );
 
-apiRouter.get("/api/mahasiswa/:uuid",
+apiRouter.get("/api/mahasiswa/:id",
   middlewares.adminAuthorization.authorize,
-  controllers.api.mahasiswa.getMahasiswa
+  controllers.api.mahasiswa.getMahasiswaById
 );
-
-// apiRouter.get("/api/mahasiswa/:id",
-//   middlewares.adminAuthorization.authorize,
-//   controllers.api.mahasiswa.getMahasiswaById
-// );
 
 apiRouter.get("/api/mahasiswa",
   middlewares.adminAuthorization.authorize,
@@ -93,11 +79,6 @@ apiRouter.post("/api/mahasiswa/booking",
   controllers.api.registrations.createRegistrations
 );
 
-apiRouter.get("/api/bookings/:id",
-  middlewares.mahasiswaAuthorization.authorize || middlewares.adminAuthorization.authorize,
-  controllers.api.registrations.getRegistrations
-);
-
 apiRouter.get("/api/bookings",
   middlewares.mahasiswaAuthorization.authorize || middlewares.adminAuthorization.authorize,
   controllers.api.registrations.getAllRegistrations
@@ -108,10 +89,10 @@ apiRouter.delete("/api/destroys/booking",
   controllers.api.registrations.deleteAllRegistrations
 );
 
-// apiRouter.get("/api/booking/:id",
-//   middlewares.mahasiswaAuthorization.authorize || middlewares.adminAuthorization.authorize,
-//   controllers.api.registrations.getRegistrationsOne
-// );
+apiRouter.get("/api/booking/:id",
+  middlewares.mahasiswaAuthorization.authorize || middlewares.adminAuthorization.authorize,
+  controllers.api.registrations.getRegistrationsOne
+);
 
 
 /**
